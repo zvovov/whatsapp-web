@@ -28,6 +28,8 @@ You can only send messages. So unless you can talk to yourself, technically, it 
 3.  Press `y` in console after WhatsApp Web is done loading.
 4.  Chat. Chat. Chat.
 
+Type `stopit` in the console to end the chat.
+
 #### Disclaimer
 
 Not affiliated with WhatsApp.

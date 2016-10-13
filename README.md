@@ -8,6 +8,7 @@ You can only send messages. So unless you can talk to yourself, technically, it 
 
 ## Requirements
 
+- Python 3
 - [selenium](http://selenium-python.readthedocs.io/installation.html) Tested with 2.53.6
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) Tested with 2.24
 

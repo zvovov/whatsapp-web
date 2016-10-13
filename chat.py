@@ -40,7 +40,7 @@ def main():
         print("Sending msgs to: ", threadName.text)
         while True:
             msg = input().strip()
-            if msg == 'fuckoffnow':
+            if msg == 'fuckoffnow' or msg == 'stopit':
                 print("\t Press Enter to end.")
                 break
             sendMsg(driver, msg)

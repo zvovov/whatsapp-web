@@ -31,7 +31,7 @@ You can ~~only send messages~~. You can send and receive messages.
 
 #### Start Chatting
 
-    `python chat.py <name>`
+`python chat.py <name>`
   
 1.  Replace `<name>` with the name of a contact or a group in your WhatsApp. Even partial names will work.
 2.  Scan the QR code displayed on screen from the WhatsApp mobile app.
@@ -40,14 +40,14 @@ You can ~~only send messages~~. You can send and receive messages.
 
 #### Switch to another chat
 
-    `sendto <name>`
+`sendto <name>`
 
 1.  Replace `<name>` with the name of the contact/group you want to chat with now. Again, partial names will work.
 2.  You can switch between chats as many times you want. Unread messages will be displayed to you every time.
 
 #### Stop sending messages and only receive messages
 
-    `stopsending`
+`stopsending`
 
 This will allow you to only see incoming messages. Your messages won't be sent. To send messages again, restart the script.
 

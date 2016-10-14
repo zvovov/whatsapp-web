@@ -1,16 +1,24 @@
 # whatsapp-web
-Yo! Use WhatsApp from the command line. No :phone: required.
+
+Yo! Use WhatsApp from the command line.
 
 Chat everywhere you couldn't before... like at your desk. Hah  :frog:
 
-You can only send messages. So unless you can talk to yourself, technically, it won't be a conversation.
+You can ~~only send messages~~. You can send and receive messages.
+
+### Features
+
+  - Send and receive messages to and from any contact/group in your WhatsApp *from command line*.
+  - Switch between different chats *from command line*.
+  - You can only send/receive text messages. Emoji, image, audio, video or anything else is not supported right now. Yeah, it sucks, I know. But.. but it's **command-line**. :neckbeard:
 
 
 ## Requirements
 
-- Python 3
+- Python 3.3+
 - [selenium](http://selenium-python.readthedocs.io/installation.html) Tested with 2.53.6
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) Tested with 2.24
+
 
 ## Installation
 
@@ -21,6 +29,8 @@ You can only send messages. So unless you can talk to yourself, technically, it 
 
 ## Usage
 
+#### Start Chatting
+
 1.  `python chat.py <name>`
   
     Replace `<name>` with the name of a contact or a group in your WhatsApp. Even partial names will work.
@@ -28,8 +38,23 @@ You can only send messages. So unless you can talk to yourself, technically, it 
 3.  Press `y` in console after WhatsApp Web is done loading.
 4.  Chat. Chat. Chat.
 
-Type `stopit` in the console to end the chat.
+#### Switch to another chat
 
-#### Disclaimer
+1.  `sendto <name>`
+
+    Replace `<name>` with the name of the contact/group you want to chat with now. Again, partial names will work.
+2.  You can switch between chats as many times you want. Unread messages will be displayed to you every time.
+
+#### Stop sending messages and only receive messages
+
+1.  `stopsending`
+
+    This will allow you to only see incoming messages. Your messages won't be sent. To send messages again, restart the script.
+
+#### Exit
+1.  Press `Ctrl+C` two times. 
+
+
+### Disclaimer
 
 Not affiliated with WhatsApp.

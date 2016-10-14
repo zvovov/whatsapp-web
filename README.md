@@ -22,16 +22,16 @@ You can ~~only send messages~~. You can send and receive messages.
 
 ## Installation
 
-1.  Clone this repository `git clone https://github.com/zvovov/whatsapp-web.git`  
-2.  `pip install selenium`
+1.  Clone this repository. `$ git clone https://github.com/zvovov/whatsapp-web.git`  
+2.  Install selenium. `$ pip install selenium`
 3.  Download and extract [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads).zip
 4.  Put path to ChromeDriver binary in the line `driver = webdriver.Chrome('/path/to/chromedriver')` in `chat.py` file of this repository.  
 
 ## Usage
 
-#### Start Chatting
+#### Start Chatting  
 
-`python chat.py <name>`
+`$ python chat.py <name>`
   
 1.  Replace `<name>` with the name of a contact or a group in your WhatsApp. Even partial names will work.
 2.  Scan the QR code displayed on screen from the WhatsApp mobile app.
@@ -42,6 +42,7 @@ You can ~~only send messages~~. You can send and receive messages.
 
 `sendto <name>`
 
+1.  Type it while `chat.py` is running.
 1.  Replace `<name>` with the name of the contact/group you want to chat with now. Again, partial names will work.
 2.  You can switch between chats as many times you want. Unread messages will be displayed to you every time.
 
@@ -49,7 +50,8 @@ You can ~~only send messages~~. You can send and receive messages.
 
 `stopsending`
 
-This will allow you to only see incoming messages. Your messages won't be sent. To send messages again, restart the script.
+1.  Type it while `chat.py` is running.
+1.  This will allow you to only see incoming messages. Your messages won't be sent. To send messages again, restart the script.
 
 #### Exit
 

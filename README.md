@@ -12,20 +12,18 @@ You can ~~only send messages~~. You can send and receive messages.
   - Switch between different chats *from command line*.
   - You can only send/receive text messages. Emoji, image, audio, video or anything else is not supported right now. Yeah, it sucks, I know. But.. but it's **command-line**. :neckbeard:
 
-
 ## Requirements
 
-- Python 3.3+
+- Python 3
 - [selenium](http://selenium-python.readthedocs.io/installation.html) Tested with 2.53.6
 - [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) Tested with 2.24
-
 
 ## Installation
 
 1.  Clone this repository. `$ git clone https://github.com/zvovov/whatsapp-web.git`  
 2.  Install selenium. `$ pip install selenium`
 3.  Download and extract [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads).zip
-4.  Put path to ChromeDriver binary in the line `driver = webdriver.Chrome('/path/to/chromedriver')` in `chat.py` file of this repository.  
+4.  Put path to ChromeDriver executable in the line `'chromedriver_path': '/path/to/chromedriver'` in `chat.py` file of this repository.  
 
 ## Usage
 
@@ -55,7 +53,22 @@ You can ~~only send messages~~. You can send and receive messages.
 
 #### Exit
 
-Press `Ctrl+C` two times. 
+Press `Ctrl+C` two times.
+
+#### Configuration
+
+```
+config = {
+    'chromedriver_path': '/path/to/chromedriver',
+    'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
+    'colors': True,  # True/False. True prints colorful msgs in console
+    ...
+}
+```
+Parameter             | Use
+`'chromedriver_path'` | Path to the chromedriver executable on your system
+`'get_msg_interval'`  | *Time in seconds between each check for new incoming messages.* Eg. `'get_msg_interval': 5` would check the active chat for any new messages every `5` seconds.
+`'colors'`            | *Boolean flag for coloured console output.* If you want colorful messages in console, different colors for incoming and outgoing messages, set this to `True`. Otherwise, if you're seeing weird symbols like `[92m`, `[0m` around each message, set this to `False`.
 
 
 ### Disclaimer

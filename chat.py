@@ -11,18 +11,19 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException as WebDriverException
 
-# WW = Whatsapp Web = web.whatsapp.com
-ww_url = "https://web.whatsapp.com/"
+config = {
+    'chromedriver_path': '/home/chirag/src/chromedriver/chromedriver',
+    'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
+    'colors': True,  # True/False. True prints colorful msgs in console
+    'ww_url': "https://web.whatsapp.com/"
+}
 
-# for incoming msgs
-get_msg_interval = 5
 incoming_scheduler = sched.scheduler(time.time, time.sleep)
-
 last_printed_msg_id = 0
 last_thread_name = ''
 
 
-# colors in terminal
+# colors in console
 class bcolors:
     HEADER = '\033[95m'
     OKBLUE = '\033[94m'
@@ -40,14 +41,14 @@ try:
 
         if len(sys.argv) > 1:
             # setting up Chrome with selenium
-            driver = webdriver.Chrome('/home/chirag/src/chromedriver/chromedriver')
+            driver = webdriver.Chrome(config['chromedriver_path'])
 
             # open WW in browser
-            driver.get(ww_url)
+            driver.get(config['ww_url'])
 
             # prompt user to connect device to WW
             while True:
-                isConnected = input(bcolors.HEADER + "\n\tPhone connected? y/n: " + bcolors.ENDC)
+                isConnected = input(decorateMsg("\n\tPhone connected? y/n: ", bcolors.HEADER))
                 if isConnected.lower() == 'y':
                     break
 
@@ -58,9 +59,6 @@ try:
             # getting true name of contact/group
             last_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//div[contains(@class, "chat-main")]').text
 
-            # sending multiple msgs to friend_name
-            print(bcolors.OKBLUE + "\n\tSending msgs to:", last_thread_name + bcolors.ENDC)
-
             # start background thread
             incoming_thread = threading.Thread(target=startGetMsg, args=(driver,))
             incoming_thread.start()
@@ -70,14 +68,14 @@ try:
                 if len(msg) > 7 and 'sendto ' in msg[:7]:
                         chooseReceiver(driver, receiver=msg[7:])
                 elif msg == 'stopsending':
-                    print(bcolors.WARNING + "\tYou will only receive msgs now.\n\tPress Ctrl+C to exit." + bcolors.ENDC)
+                    print(decorateMsg("\tYou will only receive msgs now.\n\tPress Ctrl+C to exit.", bcolors.WARNING))
                     # TODO: stop the incoming_scheduler event
                     break
                 else:
                     sendMsg(driver, msg)
 
         else:
-            sys.exit(bcolors.FAIL + "\nError: Missing name of contact/group\npython chat.py <name>" + bcolors.ENDC)
+            sys.exit(decorateMsg("\nError: Missing name of contact/group\npython chat.py <name>", bcolors.FAIL))
 
         # open all contacts page
         # driver.find_element(By.TAG_NAME, "button").click()
@@ -88,7 +86,9 @@ try:
         Type 'msg' in 'driver' and press RETURN
         """
         # select correct input box to type msg
-        driver.find_element(By.XPATH, '//*[@id="main"]//footer//div[contains(@class, "input")]').click()
+        input_box = driver.find_element(By.XPATH, '//*[@id="main"]//footer//div[contains(@class, "input")]')
+        # input_box.clear()
+        input_box.click()
 
         action = ActionChains(driver)
         action.send_keys(msg)
@@ -100,7 +100,7 @@ try:
         """
         Start schdeuler that gets incoming msgs every get_msg_interval seconds
         """
-        incoming_scheduler.enter(get_msg_interval, 1, getMsg, (driver, incoming_scheduler))
+        incoming_scheduler.enter(config['get_msg_interval'], 1, getMsg, (driver, incoming_scheduler))
         incoming_scheduler.run()
 
 
@@ -142,10 +142,24 @@ try:
                     # Print all msgs from last printed msg till newest msg
                     for i in range(print_from + 1, len(all_msgs_text_only)):
                         last_printed_msg_id = all_msgs_text_only[i].get_attribute('data-id')
-                        print(bcolors.OKGREEN + all_msgs_text_only[i].text + bcolors.ENDC)
+                        print(decorateMsg("\n" + all_msgs_text_only[i].text, bcolors.OKGREEN))
 
         # add the task to the scheduler again
-        incoming_scheduler.enter(get_msg_interval, 1, getMsg, (driver, scheduler,))
+        incoming_scheduler.enter(config['get_msg_interval'], 1, getMsg, (driver, scheduler,))
+
+
+    def decorateMsg(msg, color=None):
+        """
+        Returns:
+                colored msg, if colors are enabled in config and a color is provided for msg
+                msg, otherwise
+        """
+        msg_string = msg
+        if config['colors']:
+            if color:
+                msg_string = color + msg + bcolors.ENDC
+
+        return msg_string
 
 
     def printThreadName(driver):
@@ -153,19 +167,21 @@ try:
         curr_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//div[contains(@class, "chat-main")]').text
         if curr_thread_name != last_thread_name:
             last_thread_name = curr_thread_name
-            print(bcolors.OKBLUE + "\n\tSending msgs to:", curr_thread_name + bcolors.ENDC)
+            print(decorateMsg("\n\tSending msgs to:", bcolors.OKBLUE), curr_thread_name)
 
 
     def chooseReceiver(driver, receiver=None):
         # search name of friend/group
         friend_name = receiver if receiver else ' '.join(sys.argv[1:])
-        search_bar = driver.find_element(By.XPATH, '//*[@id="side"]//input')
-        search_bar.send_keys(friend_name)
-        search_bar.send_keys(Keys.RETURN)
-
+        input_box = driver.find_element(By.XPATH, '//*[@id="side"]//input')
+        input_box.clear()
+        input_box.click()
+        input_box.send_keys(friend_name)
+        input_box.send_keys(Keys.RETURN)
+        printThreadName(driver)
 
     if __name__ == '__main__':
         main()
 
-except (KeyboardInterrupt, WebDriverException):
-    sys.exit(bcolors.WARNING + "\tBye!" + bcolors.ENDC)
+except (AssertionError, KeyboardInterrupt, WebDriverException):
+    sys.exit(decorateMsg("\n\tPress Ctrl+C again to exit.", bcolors.WARNING))

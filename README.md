@@ -63,6 +63,7 @@ config = {
 ```
 
 Parameter             | Use
+---                   | --- 
 `'chromedriver_path'` | Path to the chromedriver executable on your system
 `'get_msg_interval'`  | *Time in seconds between each check for new incoming messages.* Eg. `'get_msg_interval': 5` would check the active chat for any new messages every `5` seconds.
 `'colors'`            | *Boolean flag for coloured console output.* If you want colorful messages in console, different colors for incoming and outgoing messages, set this to `True`. Otherwise, if you're seeing weird symbols like `[92m`, `[0m` around each message, set this to `False`.

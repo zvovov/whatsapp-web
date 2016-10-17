@@ -9,6 +9,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import WebDriverException as WebDriverException
 
 # WW = Whatsapp Web = web.whatsapp.com
 ww_url = "https://web.whatsapp.com/"
@@ -86,6 +87,9 @@ try:
         """
         Type 'msg' in 'driver' and press RETURN
         """
+        # select correct input box to type msg
+        driver.find_element(By.XPATH, '//*[@id="main"]//footer//div[contains(@class, "input")]').click()
+
         action = ActionChains(driver)
         action.send_keys(msg)
         action.send_keys(Keys.RETURN)
@@ -110,13 +114,14 @@ try:
         printThreadName(driver)
 
         # get incoming msgs
-        all_msgs = driver.find_element(By.XPATH, '//*[@id="main"]//div[contains(@class, "message-list")]')
-        all_msgs_text_only = all_msgs.find_elements(By.XPATH, '//div[contains(@class, "message-text")]')
+        all_msgs_text_only = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message-text")]')
 
         # check if last msg was outgoing.
-        # last_msg = all_msgs_text_only.find_element_by_xpath('//div[contains(@class, "message-text")][last()]')
-        last_msg = all_msgs_text_only[-1]
-        last_msg_id = last_msg.get_attribute('data-id')
+        try:
+            last_msg = all_msgs_text_only[-1]
+            last_msg_id = last_msg.get_attribute('data-id')
+        except IndexError:
+            last_msg_id = None
         if last_msg_id:
             # if last msg was incoming
             if last_msg_id[:5] == 'false':
@@ -154,7 +159,7 @@ try:
     def chooseReceiver(driver, receiver=None):
         # search name of friend/group
         friend_name = receiver if receiver else ' '.join(sys.argv[1:])
-        search_bar = driver.find_element(By.TAG_NAME, "input")
+        search_bar = driver.find_element(By.XPATH, '//*[@id="side"]//input')
         search_bar.send_keys(friend_name)
         search_bar.send_keys(Keys.RETURN)
 
@@ -162,5 +167,5 @@ try:
     if __name__ == '__main__':
         main()
 
-except KeyboardInterrupt:
+except (KeyboardInterrupt, WebDriverException):
     sys.exit(bcolors.WARNING + "\tBye!" + bcolors.ENDC)

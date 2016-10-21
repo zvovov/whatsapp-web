@@ -1,5 +1,8 @@
 #! /usr/bin/python3
 
+### Created by Chirag Khatri
+### github.com/zvovov
+
 import sched
 import sys
 import threading
@@ -111,7 +114,7 @@ try:
         global last_printed_msg_id
 
         # print conversation name
-        printThreadName(driver)
+        curr_thread_name = printThreadName(driver)
 
         # get incoming msgs
         all_msgs_text_only = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message-text")]')
@@ -142,7 +145,7 @@ try:
                     # Print all msgs from last printed msg till newest msg
                     for i in range(print_from + 1, len(all_msgs_text_only)):
                         last_printed_msg_id = all_msgs_text_only[i].get_attribute('data-id')
-                        print(decorateMsg("\n" + all_msgs_text_only[i].text, bcolors.OKGREEN))
+                        print(decorateMsg(curr_thread_name + ": " + all_msgs_text_only[i].text, bcolors.OKGREEN))
 
         # add the task to the scheduler again
         incoming_scheduler.enter(config['get_msg_interval'], 1, getMsg, (driver, scheduler,))
@@ -168,6 +171,7 @@ try:
         if curr_thread_name != last_thread_name:
             last_thread_name = curr_thread_name
             print(decorateMsg("\n\tSending msgs to:", bcolors.OKBLUE), curr_thread_name)
+        return curr_thread_name
 
 
     def chooseReceiver(driver, receiver=None):

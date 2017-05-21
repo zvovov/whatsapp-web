@@ -15,7 +15,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException as WebDriverException
 
 config = {
-    'chromedriver_path': '/home/chirag/src/chromedriver/chromedriver',
+    'chromedriver_path': '/home/chirag/src/chromedriver/chromedriver2.29',
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console
     'ww_url': "https://web.whatsapp.com/"
@@ -187,5 +187,11 @@ try:
     if __name__ == '__main__':
         main()
 
-except (AssertionError, KeyboardInterrupt, WebDriverException):
+except AssertionError as e:
+    sys.exit(decorateMsg("\n\tCannot open Whatsapp web URL.", bcolors.WARNING))
+
+except KeyboardInterrupt as e:
     sys.exit(decorateMsg("\n\tPress Ctrl+C again to exit.", bcolors.WARNING))
+
+except WebDriverException as e:
+    sys.exit(print(e, decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome vesion.", bcolors.WARNING)))

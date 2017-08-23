@@ -7,6 +7,7 @@ import sched
 import sys
 import threading
 import time
+import os
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -15,7 +16,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException as WebDriverException
 
 config = {
-    'chromedriver_path': '/home/chirag/src/chromedriver/chromedriver',
+    'chromedriver_path': '/home/ubuntu/bin/chromedriver',
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console
     'ww_url': "https://web.whatsapp.com/"
@@ -43,8 +44,19 @@ try:
         global last_thread_name
 
         if len(sys.argv) > 1:
+            # Use a data directory so that we can persist cookies per session and not have to
+            # authorize this application every time.
+            # NOTE: This gets created in your home directory and can get quite large over time.
+            # To fix this, simply delete this directory and re-authorize your WhatsApp Web session.
+            chrome_data_dir_directory = "{0}/.chrome/data_dir/whatsapp_web_cli".format(os.environ['HOME'])
+            if not os.path.exists(chrome_data_dir_directory):
+                os.makedirs(chrome_data_dir_directory)
+
+            driver_options = webdriver.ChromeOptions()
+            driver_options.add_argument("user-data-dir={0}".format(chrome_data_dir_directory))
+
             # setting up Chrome with selenium
-            driver = webdriver.Chrome(config['chromedriver_path'])
+            driver = webdriver.Chrome(config['chromedriver_path'], chrome_options=driver_options)
 
             # open WW in browser
             driver.get(config['ww_url'])
@@ -187,5 +199,11 @@ try:
     if __name__ == '__main__':
         main()
 
-except (AssertionError, KeyboardInterrupt, WebDriverException):
+except AssertionError as e:
+    sys.exit(decorateMsg("\n\tCannot open Whatsapp web URL.", bcolors.WARNING))
+
+except KeyboardInterrupt as e:
     sys.exit(decorateMsg("\n\tPress Ctrl+C again to exit.", bcolors.WARNING))
+
+except WebDriverException as e:
+    sys.exit(print(e, decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome vesion.", bcolors.WARNING)))

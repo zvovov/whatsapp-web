@@ -106,7 +106,13 @@ try:
         input_box.click()
 
         action = ActionChains(driver)
-        action.send_keys(msg)
+        messages = msg.split("||")
+
+        for line in messages:
+            action.send_keys(line)
+            action \
+            .key_down(Keys.SHIFT+Keys.RETURN) \
+            .key_up(Keys.SHIFT)
         action.send_keys(Keys.RETURN)
         action.perform()
 

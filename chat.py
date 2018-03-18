@@ -128,10 +128,10 @@ try:
         # print conversation name
         curr_thread_name = printThreadName(driver)
 
-        # get all msgs
-        all_msgs = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message")]')
-
         try:
+            # get all msgs
+            all_msgs = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message")]')
+
             # check if there is atleast one message in the chat
             if len(all_msgs) >= 1:
                 last_msg_outgoing = outgoingMsgCheck(all_msgs[-1])
@@ -139,7 +139,8 @@ try:
                 msgs_present = True
             else:
                 msgs_present = False
-        except:
+        except Exception as e:
+            print(e)
             msgs_present = False
 
         if msgs_present:
@@ -150,7 +151,7 @@ try:
                     pass
                 # else print new msgs
                 else:
-                    print_from = len(all_msgs)
+                    print_from = 0
                     # loop from last msg to first
                     for i, curr_msg in reversed(list(enumerate(all_msgs))):
                         curr_msg_outgoing = outgoingMsgCheck(curr_msg)
@@ -188,13 +189,15 @@ try:
         Message Text is a blank string, if it is a non-text message
         TODO: Identify msg type and print accordingly
         """
-        msg = webdriver_element.find_element(By.XPATH, './/div[contains(@class, "copyable-text")]')
-        msg_sender = msg.get_attribute('data-pre-plain-text')
-
         # check for non-text message
         try:
+            msg = webdriver_element.find_element(By.XPATH, './/div[contains(@class, "copyable-text")]')
+            msg_sender = msg.get_attribute('data-pre-plain-text')
             msg_text = msg.find_elements(By.XPATH, './/span[contains(@class, "selectable-text")]')[-1].text
         except IndexError:
+            msg_text = ""
+        except Exception:
+            msg_sender = ""
             msg_text = ""
 
         return msg_sender, msg_text

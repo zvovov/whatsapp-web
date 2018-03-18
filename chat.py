@@ -243,4 +243,4 @@ except KeyboardInterrupt as e:
     sys.exit(decorateMsg("\n\tPress Ctrl+C again to exit.", bcolors.WARNING))
 
 except WebDriverException as e:
-    sys.exit(print(e, decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome vesion.", bcolors.WARNING)))
+    sys.exit(print(e, decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome version.", bcolors.WARNING)))

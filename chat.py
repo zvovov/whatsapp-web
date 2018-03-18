@@ -23,7 +23,7 @@ config = {
 }
 
 incoming_scheduler = sched.scheduler(time.time, time.sleep)
-last_printed_msg_id = 0
+last_printed_msg = None
 last_thread_name = ''
 
 
@@ -72,7 +72,7 @@ try:
             chooseReceiver(driver)
 
             # getting true name of contact/group
-            last_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//div[contains(@class, "chat-main")]').text
+            last_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//span[contains(@dir, "auto")]').text
 
             # start background thread
             incoming_thread = threading.Thread(target=startGetMsg, args=(driver,))
@@ -101,7 +101,7 @@ try:
         Type 'msg' in 'driver' and press RETURN
         """
         # select correct input box to type msg
-        input_box = driver.find_element(By.XPATH, '//*[@id="main"]//footer//div[contains(@class, "input")]')
+        input_box = driver.find_element(By.XPATH, '//*[@id="main"]//footer//div[contains(@contenteditable, "true")]')
         # input_box.clear()
         input_box.click()
 
@@ -123,44 +123,81 @@ try:
         """
         Get incoming msgs from the driver repeatedly
         """
-        global last_printed_msg_id
+        global last_printed_msg
 
         # print conversation name
         curr_thread_name = printThreadName(driver)
 
-        # get incoming msgs
-        all_msgs_text_only = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message-text")]')
+        # get all msgs
+        all_msgs = driver.find_elements(By.XPATH, '//*[@id="main"]//div[contains(@class, "message")]')
 
-        # check if last msg was outgoing.
         try:
-            last_msg = all_msgs_text_only[-1]
-            last_msg_id = last_msg.get_attribute('data-id')
-        except IndexError:
-            last_msg_id = None
-        if last_msg_id:
+            # check if there is atleast one message in the chat
+            if len(all_msgs) >= 1:
+                last_msg_outgoing = outgoingMsgCheck(all_msgs[-1])
+                last_msg_sender, last_msg_text = getMsgMetaInfo(all_msgs[-1])
+                msgs_present = True
+            else:
+                msgs_present = False
+        except:
+            msgs_present = False
+
+        if msgs_present:
             # if last msg was incoming
-            if last_msg_id[:5] == 'false':
+            if not last_msg_outgoing:
                 # if last_msg is already printed
-                if last_printed_msg_id == last_msg_id:
+                if last_printed_msg == last_msg_sender + last_msg_text:
                     pass
                 # else print new msgs
                 else:
-                    print_from = len(all_msgs_text_only)
+                    print_from = len(all_msgs)
                     # loop from last msg to first
-                    for i, curr_msg in reversed(list(enumerate(all_msgs_text_only))):
-                        # if curr_msg is outgoing OR if last_printed_msg_id is found
-                        curr_msg_id = curr_msg.get_attribute('data-id')
-                        if curr_msg_id[:4] == 'true' or curr_msg_id == last_printed_msg_id:
+                    for i, curr_msg in reversed(list(enumerate(all_msgs))):
+                        curr_msg_outgoing = outgoingMsgCheck(curr_msg)
+                        curr_msg_sender, curr_msg_text = getMsgMetaInfo(curr_msg)
+
+                        # if curr_msg is outgoing OR if last_printed_msg is found
+                        if curr_msg_outgoing or last_printed_msg == curr_msg_sender + curr_msg_text:
                             # break
                             print_from = i
                             break
                     # Print all msgs from last printed msg till newest msg
-                    for i in range(print_from + 1, len(all_msgs_text_only)):
-                        last_printed_msg_id = all_msgs_text_only[i].get_attribute('data-id')
-                        print(decorateMsg(curr_thread_name + ": " + all_msgs_text_only[i].text, bcolors.OKGREEN))
+                    for i in range(print_from + 1, len(all_msgs)):
+                        msg_sender, msg_text = getMsgMetaInfo(all_msgs[i])
+                        last_printed_msg = msg_sender + msg_text
+                        print(decorateMsg(msg_sender + msg_text, bcolors.OKGREEN))
 
         # add the task to the scheduler again
         incoming_scheduler.enter(config['get_msg_interval'], 1, getMsg, (driver, scheduler,))
+
+
+    def outgoingMsgCheck(webdriver_element):
+        """
+        Returns True if the selenium webdriver_element has "message-out" in its class.
+        False, otherwise.
+        """
+        for _class in webdriver_element.get_attribute('class').split():
+            if _class == "message-out":
+                return True
+        return False
+
+
+    def getMsgMetaInfo(webdriver_element):
+        """
+        Returns webdriver_element's sender and message text.
+        Message Text is a blank string, if it is a non-text message
+        TODO: Identify msg type and print accordingly
+        """
+        msg = webdriver_element.find_element(By.XPATH, './/div[contains(@class, "copyable-text")]')
+        msg_sender = msg.get_attribute('data-pre-plain-text')
+
+        # check for non-text message
+        try:
+            msg_text = msg.find_elements(By.XPATH, './/span[contains(@class, "selectable-text")]')[-1].text
+        except IndexError:
+            msg_text = ""
+
+        return msg_sender, msg_text
 
 
     def decorateMsg(msg, color=None):
@@ -179,7 +216,7 @@ try:
 
     def printThreadName(driver):
         global last_thread_name
-        curr_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//div[contains(@class, "chat-main")]').text
+        curr_thread_name = driver.find_element(By.XPATH, '//*[@id="main"]/header//span[contains(@dir, "auto")]').text
         if curr_thread_name != last_thread_name:
             last_thread_name = curr_thread_name
             print(decorateMsg("\n\tSending msgs to:", bcolors.OKBLUE), curr_thread_name)

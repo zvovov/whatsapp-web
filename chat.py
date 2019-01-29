@@ -55,6 +55,10 @@ try:
             driver_options = webdriver.ChromeOptions()
             driver_options.add_argument("user-data-dir={0}".format(chrome_data_dir_directory))
 
+            # add the WebDriver proxy capability
+            #PROXY = "example.org:3128"
+            #driver_options.add_argument('--proxy-server=%s' % PROXY)
+                               
             # setting up Chrome with selenium
             driver = webdriver.Chrome(config['chromedriver_path'], chrome_options=driver_options)
 

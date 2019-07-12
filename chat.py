@@ -393,7 +393,7 @@ try:
                 except:
                     j+=1
                 # print('Number of unread messages: %s' %(unread_name.text))
-            print('Number of unread messages: %s' %(j))
+            #print('Number of unread messages: %s' %(j))
         else:
             unread=False
         

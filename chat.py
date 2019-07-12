@@ -62,6 +62,11 @@ try:
             driver_options = webdriver.ChromeOptions()
             driver_options.add_argument("user-data-dir={0}".format(chrome_data_dir_directory))
 
+            #avoid errors in certificates
+            driver_options.add_argument('--ignore-certificate-errors')
+            driver_options.add_argument('--ignore-certificate-errors-spki-list')
+            driver_options.add_argument('--ignore-ssl-errors')
+
 
             
             
@@ -426,8 +431,10 @@ try:
         global last_get_msg_allchats
         ###
         # IV: getting the unread chats
-        unread_names = driver.find_elements_by_css_selector('span.OUeyt')
+        #unread_names = driver.find_elements_by_css_selector('span.OUeyt')
+        unread_names = driver.find_elements_by_css_selector('span.P6z4j')
         if len(unread_names)>0:
+            print('Number of chant unread %i' %len(unread_names))
             unread=True
             unread_nchats=len(unread_names)
             unread_nmsgs=0
@@ -442,7 +449,8 @@ try:
         
         # Obtain the chat and corresponding last message
         #print('Previous find')
-        tmp_chats = driver.find_elements_by_class_name('_3j7s9')
+        #tmp_chats = driver.find_elements_by_class_name('_3j7s9')
+        tmp_chats = driver.find_elements_by_class_name('_2WP9Q')
         #print('then find')
         data=[]
         '''
@@ -551,7 +559,6 @@ try:
                 print(decorateMsg('\n\nNEW MESSAGES:', bcolors.OKBLUE))
 
 
-        
         for i,case in enumerate(tmp):
             if idx_print[i]:
                 #time

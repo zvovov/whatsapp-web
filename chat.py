@@ -434,7 +434,7 @@ try:
         #unread_names = driver.find_elements_by_css_selector('span.OUeyt')
         unread_names = driver.find_elements_by_css_selector('span.P6z4j')
         if len(unread_names)>0:
-            print('Number of chant unread %i' %len(unread_names))
+            #print('Number of chant unread %i' %len(unread_names))
             unread=True
             unread_nchats=len(unread_names)
             unread_nmsgs=0

@@ -15,8 +15,12 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException as WebDriverException
 
+y='y'
+stopsending='stopsending'
+sendto='sendto '
+#msg=''
 config = {
-    'chromedriver_path': "{0}/bin/chromedriver".format(os.environ['HOME']),
+    'chromedriver_path': "/home/rvk7895/Downloads/chromedriver".format(os.environ['HOME']),
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console
     'ww_url': "https://web.whatsapp.com/"
@@ -64,7 +68,7 @@ try:
             # prompt user to connect device to WW
             while True:
                 isConnected = input(decorateMsg("\n\tPhone connected? y/n: ", bcolors.HEADER))
-                if isConnected.lower() == 'y':
+                if isConnected.lower() == y:
                     break
 
             assert "WhatsApp" in driver.title
@@ -79,10 +83,10 @@ try:
             incoming_thread.start()
 
             while True:
-                msg = input().strip()
-                if len(msg) > 7 and 'sendto ' in msg[:7]:
+                msg = raw_input()
+                if len(msg) > 7 and sendto in msg[:7]:
                         chooseReceiver(driver, receiver=msg[7:])
-                elif msg == 'stopsending':
+                elif msg == stopsending:
                     print(decorateMsg("\tYou will only receive msgs now.\n\tPress Ctrl+C to exit.", bcolors.WARNING))
                     # TODO: stop the incoming_scheduler event
                     break
@@ -246,4 +250,4 @@ except KeyboardInterrupt as e:
     sys.exit(decorateMsg("\n\tPress Ctrl+C again to exit.", bcolors.WARNING))
 
 except WebDriverException as e:
-    sys.exit(print(e, decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome version.", bcolors.WARNING)))
+    sys.exit(decorateMsg("\n\tChromedriver Error. Read the above error (if any), then\n\tCheck if installed chromedriver version is compatible with installed Chrome version.", bcolors.WARNING))

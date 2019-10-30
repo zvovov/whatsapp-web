@@ -20,7 +20,7 @@ stopsending='stopsending'
 sendto='sendto '
 #msg=''
 config = {
-    'chromedriver_path': "/home/rvk7895/Downloads/chromedriver".format(os.environ['HOME']),
+    'chromedriver_path': "{0}/bin/chromedriver".format(os.environ['HOME']),
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console
     'ww_url': "https://web.whatsapp.com/"

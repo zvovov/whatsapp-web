@@ -229,7 +229,7 @@ try:
     def chooseReceiver(driver, receiver=None):
         # search name of friend/group
         friend_name = receiver if receiver else ' '.join(sys.argv[1:])
-        input_box = driver.find_element(By.XPATH, '//*[@id="side"]//input')
+        input_box = driver.find_element(By.XPATH, '//*[@id="side"]//div[contains(@class,"copyable-text selectable-text")]')
         input_box.clear()
         input_box.click()
         input_box.send_keys(friend_name)

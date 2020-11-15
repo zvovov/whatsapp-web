@@ -4,7 +4,7 @@ Yo! Use WhatsApp from the command line.
 
 Chat everywhere you couldn't before... like at your desk. Hah  :frog:
 
-You can ~~only send messages~~. You can send and receive messages.
+You can send and receive text messages.
 
 ### Features
 
@@ -14,10 +14,10 @@ You can ~~only send messages~~. You can send and receive messages.
 
 ## Requirements
 
-- [Python 3](https://www.python.org/downloads) Tested with 3.4.3, 3.6.1. **Python 2 will not work**
-- [selenium](http://selenium-python.readthedocs.io/installation.html) Tested with 2.53.6, 3.4.2
-- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) Tested with 2.24, 2.29
-- [Chrome Web Browser](https://www.google.com/chrome/browser/desktop) compatible with the ChromeDriver version you downloaded. (Eg. ChromeDriver 2.29 supports Chrome v56-58) You can get this info from the ChromeDriver download page.
+- [Python 3](https://www.python.org/downloads) Tested with 3.7.9 **Python 2 will not work**
+- [selenium](http://selenium-python.readthedocs.io/installation.html) Tested with 3.141.0
+- [ChromeDriver](https://sites.google.com/a/chromium.org/chromedriver/downloads) Tested with 86.0.4240.22
+- [Chrome Web Browser](https://www.google.com/chrome/browser/desktop) compatible with the ChromeDriver version you downloaded. (Eg. ChromeDriver 86.0.4240.22 supports Chrome v86). You can get this info from the ChromeDriver download page.
 
 ## Installation
 

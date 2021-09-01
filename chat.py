@@ -17,7 +17,7 @@ from selenium.common.exceptions import WebDriverException as WebDriverException
 
 config = {
     #whatsapp web for chromium based browsers. I used brave here. Replace with yours
-    'chromium_binary' : '{0}/bin/brave'.format(os.environ('HOME')),
+    'chromium_binary' : '{0}/bin/brave'.format(os.environ['HOME']),
     'chromedriver_path': "{0}/bin/chromedriver".format(os.environ['HOME']),
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console

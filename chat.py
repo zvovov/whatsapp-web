@@ -16,6 +16,8 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.common.exceptions import WebDriverException as WebDriverException
 
 config = {
+    #whatsapp web for chromium based browsers. I used brave here. Replace with yours
+    'chromium_binary' : '{0}/bin/brave'.format(os.environ('HOME')),
     'chromedriver_path': "{0}/bin/chromedriver".format(os.environ['HOME']),
     'get_msg_interval': 5,  # Time (seconds). Recommended value: 5
     'colors': True,  # True/False. True prints colorful msgs in console
@@ -53,6 +55,8 @@ try:
                 os.makedirs(chrome_data_dir_directory)
 
             driver_options = webdriver.ChromeOptions()
+            #important step: link the browser's install location
+            driver_options.binary_location = config['chromium_binary']
             driver_options.add_argument("user-data-dir={0}".format(chrome_data_dir_directory))
 
             # add proxy capability
